@@ -1,20 +1,31 @@
 FROM centos:centos7
 
-RUN yum -y install https://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-latest.rpm && \
-    yum -y install epel-release \
-                   yum-plugin-priorities && \
-    yum -y install  \
-                   redhat-lsb-core && \
-    yum -y install frontier-squid && \
-    yum -y install supervisor
+LABEL maintainer OSG Software <help@opensciencegrid.org>
 
-RUN yum clean all
+# Create the squid user with a fixed GID/UID
+RUN groupadd -o -g 10941 squid
+RUN useradd -o -u 10941 -g 10941 -s /sbin/nologin -d /var/lib/squid squid
 
+
+RUN yum -y install http://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-latest.rpm \
+                   epel-release \
+                   yum-plugin-priorities
+
+RUN yum clean all && \
+    yum update -y 
+
+RUN yum install -y frontier-squid && \
+    yum install -y supervisor
+
+RUN yum clean all --enablerepo=* && rm -rf /var/cache/yum/
+
+
+RUN systemctl enable frontier-squid
+
+ADD sbin/* /usr/local/sbin/
+
+ADD supervisord.conf /etc/
+ADD supervisord.d/* /etc/supervisord.d/
 RUN mkdir -p /var/log/supervisor
-ADD supervisord.conf /etc/supervisord.conf
 
-ADD dummy_pod_init.sh /usr/bin/pod_init.sh
-ADD supervisord_startup.sh /usr/bin/supervisord_startup.sh
-
-CMD ["/usr/bin/supervisord_startup.sh"]
-
+CMD ["/usr/local/sbin/supervisord_startup.sh"]
