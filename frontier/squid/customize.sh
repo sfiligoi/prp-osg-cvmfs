@@ -26,9 +26,9 @@ fi
 
 # Now actually run the config command
 
-awk --file `dirname $0`/customhelps.awk --source '{
-setoption("acl NET_LOCAL src", "$SQUID_IPRANGE")
-setoption("cache_mem", "$SQUID_CACHE_MEM")
-setoptionparameter("cache_dir", 3, "$SQUID_CACHE_DISK")
+awk --file `dirname $0`/customhelps.awk --source "{
+setoption(\"acl NET_LOCAL src\", \"$SQUID_IPRANGE\")
+setoption(\"cache_mem\", \"$SQUID_CACHE_MEM\")
+setoptionparameter(\"cache_dir\", 3, \"$SQUID_CACHE_DISK\")
 print
-}'
+}"
