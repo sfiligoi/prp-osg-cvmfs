@@ -1,6 +1,6 @@
 FROM centos:centos7
 
-RUN yum -y nfs-utils
+RUN yum -y install nfs-utils
 
 RUN yum -y install https://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-latest.rpm && \
     yum -y install epel-release \
