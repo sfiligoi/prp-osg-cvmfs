@@ -2,6 +2,8 @@ QUick and dirty install instructions:
 =====================================
 
 yum install git go golang-github-golang-glog-devel
+
+mkdir -p /root/go/src
 ln -s /usr/share/gocode/src/github.com /root/go/src/
 
 git clone ...
