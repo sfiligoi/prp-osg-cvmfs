@@ -1,21 +1,14 @@
-FROM centos:centos7
+FROM opensciencegrid/software-base:fresh
+
+RUN yum -y install osg-oasis \
+                   redhat-lsb-core
 
 RUN yum -y install nfs-utils
 
-RUN yum -y install https://repo.opensciencegrid.org/osg/3.4/osg-3.4-el7-release-latest.rpm && \
-    yum -y install epel-release \
-                   yum-plugin-priorities && \
-    yum -y install osg-oasis \
-                   redhat-lsb-core && \
-    yum -y install supervisor
-
-
 RUN yum clean all
+
+ADD cvmfs.autofs /etc/auto.master.d/cvmfs.autofs
+ADD supervisor_autofs.conf /etc/supervisord.d/
 
 #ADD cron.d/fetch-crl.cron /etc/cron.d/fetch-crl.cron
 
-#RUN mkdir -p /var/log/supervisor
-#ADD supervisord.conf /etc/supervisord.conf
-#ADD supervisord.d/condor.conf /etc/supervisord.d/condor.conf
-
-#CMD ["/usr/bin/supervisord" ,"-c" ,"/etc/supervisord.conf"]
