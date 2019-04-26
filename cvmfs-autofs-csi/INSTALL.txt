@@ -1,0 +1,12 @@
+QUick and dirty install instructions:
+=====================================
+
+yum install git go golang-github-golang-glog-devel
+ln -s /usr/share/gocode/src/github.com /root/go/src/
+
+git clone ...
+cd prp-osg-cvmfs
+mkdir -p /root/go/src/gitlab.cern.ch/cloud-infrastructure
+ln -s $PWD/cvmfs-autofs-csi /root/go/src/gitlab.cern.ch/cloud-infrastructure/cvmfs-csi
+cd cvmfs-autofs-csi
+make
