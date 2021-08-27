@@ -54,9 +54,9 @@ spec:
               command: ["/usr/local/sbin/unmount-and-terminate.sh"]
         env:
         - name: MOUNT_REPOS
-          value: "config-osg.opensciencegrid.org,icecube.opensciencegrid.org,oasis.opensciencegrid.org,connect.opensciencegrid.org,singularity.opensciencegrid.org,stash.osgstorage.org,xenon.opensciencegrid.org,ligo-containers.opensciencegrid.org,fermilab.opensciencegrid.org,nova.opensciencegrid.org,cms.cern.ch,cms-ib.cern.ch"
+          value: "config-osg.opensciencegrid.org,icecube.opensciencegrid.org,oasis.opensciencegrid.org,connect.opensciencegrid.org,singularity.opensciencegrid.org,stash.osgstorage.org"
         - name: SQUID_URI
-          value: "http://10.98.29.184:3128"
+          value: "http://10.107.251.5:3128"
         resources:
            limits:
              memory: 4Gi

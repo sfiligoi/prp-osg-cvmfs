@@ -12,4 +12,3 @@ kubectl create -f daemonset/
 
 # Create the PersistentStorageClaims for both osggpus and osgcpus namespaces
 kubectl create -f pv-osggpus/
-kubectl create -f pv-osgcpus/

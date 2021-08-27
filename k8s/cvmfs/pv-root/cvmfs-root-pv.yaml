@@ -24,7 +24,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: cvmfs-root
   local:
-    path: /
+    path: /var/run
   nodeAffinity:
     required:
       nodeSelectorTerms:
