@@ -14,8 +14,8 @@ spec:
       labels:
         k8s-app: frontier-squid
     spec:
-      nodeSelector: 
-        kubernetes.io/hostname: xcache-11.t2.ucsd.edu
+      nodeSelector:
+        topology.kubernetes.io/region: us-west
       tolerations:
       - effect: NoSchedule
         key: nautilus.io/noceph
