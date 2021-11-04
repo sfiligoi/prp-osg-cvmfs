@@ -9,6 +9,7 @@ echo "$$" > /etc/mount-and-wait.pid
 echo "Checking and Sleeping"
 
 mps=`cat /etc/mount-and-wait.mps`
+checki=0
 while [ 1 -lt 2 ]; do 
   # loop forever
 
@@ -26,9 +27,28 @@ while [ 1 -lt 2 ]; do
         else
            echo "WARNING: `date` Failed to mount /cvmfs/${mp1}" | tee -a /cvmfs/cvmfs-pod.log
         fi
+      elif [ ${checki} -eq 0 ]; then
+        nerr=`/usr/bin/attr -q -g nioerr /cvmfs/${mp1}`
+        rc=$?
+        if [ $rc -eq 0 ]; then
+          if [ "x${nerr}" != "x0" ]; then
+            echo "WARNING: `date` Found nioerr=${nerr} for /cvmfs/${mp1}" | tee -a /cvmfs/cvmfs-pod.log
+            cvmfs_talk -i "${mp1}" reset error counters
+          fi
+        else
+          echo "WARNING: `date` Failed to get nioerr for /cvmfs/${mp1}" | tee -a /cvmfs/cvmfs-pod.log
+        fi
       fi
     fi
+
   done
+
+  if [ ${checki} -eq 0 ]; then
+    # check about once per hour
+    let checki=100
+  else
+    let checki=${checki}-1
+  fi
 
   sleep 30
 done
