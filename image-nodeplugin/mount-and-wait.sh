@@ -64,6 +64,9 @@ for mp in `echo ${MOUNT_REPOS} |tr , ' '` ; do
 
  if [ ${rc} -eq 0 ] ; then
    echo "INFO: Mounted /cvmfs/${mp}" | tee -a /cvmfs/cvmfs-pod.log
+   # apart from info, this also warms up the mount
+   echo "INFO: N. Files: `ls /cvmfs/${mp} |wc -l`" | tee -a /cvmfs/cvmfs-pod.log
+   echo "INFO: N. etc Files: `find /cvmfs/${mp}/etc 2>/dev/null |wc -l`" | tee -a /cvmfs/cvmfs-pod.log
    mps="$mp $mps" #save them in reverse order
  else
    echo "ERROR: Failed to mount $mp"  | tee -a /cvmfs/cvmfs-pod.log
