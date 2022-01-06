@@ -5,7 +5,9 @@ if [ "x${SQUID_URI}" == "x" ]; then
   exit 1
 fi
 echo "CVMFS_HTTP_PROXY=\"${SQUID_URI}\"" >/etc/cvmfs/default.local
-
+echo "CVMFS_MAX_RETRIES=10" >> /etc/cvmfs/default.local
+echo "CVMFS_TIMEOUT=15" >> /etc/cvmfs/default.local
+echo "CVMFS_TIMEOUT_DIRECT=15" >> /etc/cvmfs/default.local
 
 if [ "x${QUOTA_LIMIT}" != "x" ]; then
   echo "CVMFS_QUOTA_LIMIT=${QUOTA_LIMIT}" >> /etc/cvmfs/default.local
