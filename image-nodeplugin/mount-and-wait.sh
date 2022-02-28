@@ -105,11 +105,15 @@ done
 
 # now do a pass with the most fail-safe option possible
 for mp1 in $mps; do
-  echo "INFO: Attempting lazy umount of ${mp1}"  | tee -a /cvmfs/cvmfs-pod.log
-  umount -l /cvmfs/${mp1}
-  if [ $? -eq 0 ]; then 
-   echo "INFO: Lazy unmounted ${mp1}"  | tee -a /cvmfs/cvmfs-pod.log
-  fi
+   if [ -d /cvmfs/${mp1} ]; then
+     echo "INFO: Attempting lazy umount of ${mp1}"  | tee -a /cvmfs/cvmfs-pod.log
+     umount -l /cvmfs/${mp1}
+     if [ $? -eq 0 ]; then
+       echo "INFO: Lazy unmounted ${mp1}"  | tee -a /cvmfs/cvmfs-pod.log
+     fi
+     # try to remove mount dir no matter what, to minimize chance of PVC mounting an inactive dir
+     rmdir /cvmfs/${mp1}
+   fi
 done
 
 # wait a tiny bit to make sure everything is cleaned up properly

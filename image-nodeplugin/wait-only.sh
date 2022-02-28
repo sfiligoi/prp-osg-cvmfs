@@ -13,7 +13,7 @@ checki=0
 while [ 1 -lt 2 ]; do 
   # loop forever
 
-  # make sure all the mountpoins are still alive; if not, remount
+  # make sure all the mountpoins are still alive; if not, remount or die
   for mp1 in $mps; do
     if [ ! -f /dev/shm/unmounting.lck ]; then
       mntd=`df -k /cvmfs/${mp1} |tail -1 |grep cvmfs2`
@@ -24,7 +24,11 @@ while [ 1 -lt 2 ]; do
       fi
 
       if [ "x${mntd}" == "x" ]; then
-        echo "WARNING: `date` Found /cvmfs/${mp1} unmounted." | tee -a /cvmfs/cvmfs-pod.log
+       echo "WARNING: `date` Found /cvmfs/${mp1} unmounted." | tee -a /cvmfs/cvmfs-pod.log
+       if [ "x${CVMFS_REMOUNT}" == "xN" ]; then
+        echo "ERROR: `date` Terminating on unmounted /cvmfs/${mp1}" | tee -a /cvmfs/cvmfs-pod.log
+        exit 1
+       else
         mount -t cvmfs ${mp1} /cvmfs/${mp1}
         rc=$?
         if [ $rc -eq 0 ]; then
@@ -47,6 +51,7 @@ while [ 1 -lt 2 ]; do
               echo "WARNING: `date` Failed to mount /cvmfs/${mp1}, unknown error" | tee -a /cvmfs/cvmfs-pod.log
            fi
         fi
+       fi
       elif [ ${checki} -eq 0 ]; then
         nerr=`/usr/bin/attr -q -g nioerr /cvmfs/${mp1}`
         rc=$?
