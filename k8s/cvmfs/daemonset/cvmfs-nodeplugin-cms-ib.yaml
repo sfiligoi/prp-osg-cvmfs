@@ -1,32 +1,35 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: cvmfs-nodeplugin
+  name: cvmfs-nodeplugin-cms-ib
   namespace: cvmfs
   labels: 
-    k8s-app: cvmfs-nodeplugin
+    k8s-app: cvmfs-nodeplugin-cms-ib
 spec:
   selector:
     matchLabels:
-      k8s-app: cvmfs-nodeplugin
+      k8s-app: cvmfs-nodeplugin-cms-ib
   template:
     metadata: 
       labels:
-        k8s-app: cvmfs-nodeplugin
+        k8s-app: cvmfs-nodeplugin-cms-ib
     spec:
       serviceAccount: cvmfs-nodeplugin
       tolerations:
-      - effect: NoSchedule
-        key: nautilus.io/noceph
-        operator: Exists
-      - effect: NoSchedule
-        key: nautilus.io/chase-ci
-        operator: Exists
-      - effect: NoSchedule
-        key: nautilus.io/haosu
-        operator: Exists
+       - effect: NoSchedule
+         key: nautilus.io/noceph
+         operator: Exists
+       - effect: NoSchedule
+         key: nautilus.io/chase-ci
+         operator: Exists
+       - effect: NoSchedule
+         key: nautilus.io/haosu
+         operator: Exists
+       - effect: NoSchedule
+         key: nautilus.io/suncave
+         operator: Exists
       containers:
-      - name: cvmfs
+      - name: cvmfs-cms-ib
         image: sfiligoi/prp-osg-cvmfs:nodeplugin
         imagePullPolicy: Always
         securityContext:
@@ -39,17 +42,21 @@ spec:
             exec:
               command: ["/usr/local/sbin/unmount-and-terminate.sh"]
         env:
+        - name: DEP_REPOS
+          value: "config-osg.opensciencegrid.org"
         - name: MOUNT_REPOS
-          value: "config-osg.opensciencegrid.org,icecube.opensciencegrid.org,oasis.opensciencegrid.org,connect.opensciencegrid.org,singularity.opensciencegrid.org,stash.osgstorage.org,xenon.opensciencegrid.org,fermilab.opensciencegrid.org,nova.opensciencegrid.org,cms.cern.ch,cms-ib.cern.ch"
+          value: "cms-ib.cern.ch"
         - name: SQUID_URI
           value: "http://10.98.29.184:3128"
+        - name: CVMFS_REMOUNT
+          value: "N"
         resources:
            limits:
-             memory: 4Gi
+             memory: 8Gi
              cpu: 1
            requests:
-             memory: 0.5Gi
-             cpu: 0.25
+             memory: 100Mi
+             cpu: 0.05
         volumeMounts:
         - mountPath: /cvmfs
           name:  cvmfs-base
